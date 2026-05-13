@@ -12,18 +12,68 @@
     },
     {
       "id": "q3",
+      "question": "What is the GIL and why does it exist?",
+      "expected_answer": "The Global Interpreter Lock is a mutex that protects access to Python objects, simplifying memory management in CPython but limiting true multi-threaded execution."
+    },
+    {
+      "id": "q4",
+      "question": "How does multiprocessing sidestep the GIL?",
+      "expected_answer": "Multiprocessing spawns separate processes that each have their own interpreter and memory space, so each can execute Python bytecode in parallel."
+    },
+    {
+      "id": "q5",
+      "question": "What is asyncio and how does it relate to the GIL?",
+      "expected_answer": "asyncio is single-threaded cooperative concurrency; it sidesteps the GIL question entirely by running async I/O on a single event loop."
+    },
+    {
+      "id": "q6",
       "question": "What are the four stages of a RAG pipeline?",
       "expected_answer": "Ingestion, retrieval, generation, and evaluation."
     },
     {
-      "id": "q4",
+      "id": "q7",
       "question": "What chunking parameters are recommended for prose in RAG?",
-      "expected_answer": "Recursive character splitting with ~500-token chunks and ~80-token overlap."
+      "expected_answer": "Recursive character splitting with around 500-token chunks and ~80-token overlap."
     },
     {
-      "id": "q5",
+      "id": "q8",
       "question": "What does MMR balance in retrieval?",
-      "expected_answer": "Relevance and diversity."
+      "expected_answer": "Relevance to the query and diversity among the retrieved chunks."
+    },
+    {
+      "id": "q9",
+      "question": "Why measure faithfulness, relevance, context precision, and hallucination separately?",
+      "expected_answer": "Each captures a distinct failure mode: faithfulness checks grounding, relevance checks the answer addresses the question, context precision checks retrieval quality, and hallucination checks for unsupported claims."
+    },
+    {
+      "id": "q10",
+      "question": "Why use cosine similarity for sentence-transformer embeddings?",
+      "expected_answer": "Sentence-transformer models are trained with cosine-similarity objectives, so cosine is the natural distance metric for their outputs."
+    },
+    {
+      "id": "q11",
+      "question": "What is the purpose of chunk overlap in recursive text splitting?",
+      "expected_answer": "Overlap preserves context across chunk boundaries so that a query whose answer straddles a split is still recoverable."
+    },
+    {
+      "id": "q12",
+      "question": "Why is local embedding preferable to a hosted API for RAG prototyping?",
+      "expected_answer": "It removes API cost, latency, and rate-limit constraints, and avoids leaking documents to a third party during development."
+    },
+    {
+      "id": "q13",
+      "question": "What does context precision measure and how is it scored?",
+      "expected_answer": "It measures whether the retrieved chunks are actually relevant to the question; an LLM-as-judge classifies each chunk as relevant or not."
+    },
+    {
+      "id": "q14",
+      "question": "When does threading speed up CPU-bound Python code?",
+      "expected_answer": "It generally does not — for CPU-bound work, threads compete for the GIL and provide no real speedup. Multiprocessing is the standard alternative."
+    },
+    {
+      "id": "q15",
+      "question": "What is the trade-off when increasing the chunk size?",
+      "expected_answer": "Larger chunks preserve more context per retrieval but reduce recall precision and may push out genuinely relevant content from the top-k window."
     }
   ]
 }
