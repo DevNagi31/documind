@@ -1,0 +1,29 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "question": "How does Python's GIL affect threading for CPU-bound tasks?",
+      "expected_answer": "Threads do not provide real speedup for CPU-bound work because only one thread executes Python bytecode at a time. Use multiprocessing for true parallelism."
+    },
+    {
+      "id": "q2",
+      "question": "Is threading still useful for I/O-bound tasks in Python?",
+      "expected_answer": "Yes — the GIL is released during blocking I/O, so other threads can run."
+    },
+    {
+      "id": "q3",
+      "question": "What are the four stages of a RAG pipeline?",
+      "expected_answer": "Ingestion, retrieval, generation, and evaluation."
+    },
+    {
+      "id": "q4",
+      "question": "What chunking parameters are recommended for prose in RAG?",
+      "expected_answer": "Recursive character splitting with ~500-token chunks and ~80-token overlap."
+    },
+    {
+      "id": "q5",
+      "question": "What does MMR balance in retrieval?",
+      "expected_answer": "Relevance and diversity."
+    }
+  ]
+}
