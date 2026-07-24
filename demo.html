@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocuMind: Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #121212; --panel: #1c1c1c; --panel-2: #262626; --border: #2d2d2d;
+    --ink: #EDEBE6; --muted: #9a9993; --muted-2: #a9a8a2;
+    --gold: #E0A83D; --teal: #2E7D8A; --teal-band: #0E474C;
+    --green: #5aa96b; --amber: #d0912f; --red: #c25b52;
+    --serif: 'Newsreader', Georgia, serif; --sans: 'Public Sans', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: var(--gold); text-decoration: none; }
+  ::selection { background: var(--gold); color: var(--bg); }
+
+  header.top { display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(18,18,18,.92); backdrop-filter: blur(8px); z-index: 10; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mark { width: 34px; height: 34px; border-radius: 8px; background: var(--panel); border: 1px solid #333; display: flex; align-items: center; justify-content: center; color: var(--gold); font-family: var(--serif); font-size: 19px; font-weight: 600; }
+  .brand .name { font-family: var(--serif); font-size: 22px; font-weight: 600; }
+  .brand .badge { font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; margin-left: 6px; letter-spacing: .04em; text-transform: uppercase; }
+  .top a.back { font-size: 14px; color: var(--muted-2); font-weight: 500; }
+  .top a.back:hover { color: #fff; }
+
+  .layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 71px); }
+
+  /* Sidebar */
+  aside { border-right: 1px solid var(--border); padding: 26px 22px; background: #171717; }
+  aside h2 { font-family: var(--serif); font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted-2); margin-bottom: 8px; letter-spacing: .02em; }
+  .field select, .field input[type=text] { width: 100%; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; color: var(--ink); font-family: inherit; font-size: 14px; }
+  .rangewrap { display: flex; align-items: center; gap: 10px; }
+  input[type=range] { flex: 1; accent-color: var(--gold); }
+  .rangeval { font-family: var(--mono); font-size: 13px; color: var(--gold); min-width: 26px; text-align: right; }
+  .check { display: flex; align-items: center; gap: 9px; font-size: 14px; color: var(--muted-2); cursor: pointer; margin-bottom: 12px; }
+  .check input { accent-color: var(--teal); width: 15px; height: 15px; }
+  .sb-note { font-size: 12px; color: #7c7b76; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px; line-height: 1.5; }
+  .sb-note code { font-family: var(--mono); color: var(--gold); font-size: 11px; }
+
+  /* Main */
+  main { padding: 34px 40px 60px; max-width: 1000px; }
+  main h1 { font-family: var(--serif); font-size: 30px; font-weight: 600; margin-bottom: 6px; }
+  main .lede { color: var(--muted); font-size: 15px; margin-bottom: 28px; }
+
+  .ask { display: flex; gap: 10px; margin-bottom: 12px; }
+  .ask input { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; color: var(--ink); font-family: inherit; font-size: 15px; }
+  .ask input:focus { outline: none; border-color: var(--teal); }
+  .ask button { background: var(--teal); color: #fff; border: none; border-radius: 10px; padding: 0 26px; font-weight: 600; font-size: 15px; cursor: pointer; transition: background .15s; }
+  .ask button:hover { background: #368ea0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+  .chip { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--muted-2); cursor: pointer; }
+  .chip:hover { border-color: var(--gold); color: var(--ink); }
+
+  .result { display: none; grid-template-columns: 1fr 300px; gap: 28px; }
+  .result.show { display: grid; }
+  @media (max-width: 900px) { .result.show { grid-template-columns: 1fr; } .layout { grid-template-columns: 1fr; } aside { display: none; } }
+
+  .sec-title { font-family: var(--serif); font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+  .answer { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; line-height: 1.65; font-size: 15px; color: #e3e1db; margin-bottom: 28px; }
+  .answer sup { color: var(--gold); font-weight: 600; font-size: 11px; }
+
+  .source { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .source-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; }
+  .source-head .cite { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+  .source-head .score { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .source-body { display: none; padding: 0 16px 14px; }
+  .source.open .source-body { display: block; }
+  .source-body pre { background: #141414; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; color: #c9c7c1; white-space: pre-wrap; overflow-x: auto; }
+
+  .evalcard { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: sticky; top: 90px; }
+  .evalcard h3 { font-family: var(--serif); font-size: 18px; font-weight: 600; margin-bottom: 18px; }
+  .metric { margin-bottom: 16px; }
+  .metric .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .metric .row b { font-weight: 600; }
+  .metric .val { font-family: var(--mono); font-weight: 500; }
+  .bar { height: 6px; border-radius: 3px; background: #333; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 3px; }
+  .eval-foot { font-size: 12px; color: #7c7b76; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; line-height: 1.5; }
+
+  .loading { display:none; align-items:center; gap:10px; color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .loading.show { display: flex; }
+  .spinner { width: 16px; height: 16px; border: 2px solid #333; border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="mark">D</div>
+    <span class="name">DocuMind</span>
+    <span class="badge">Live Demo</span>
+  </div>
+  <a class="back" href="index.html">&larr; Back to home</a>
+</header>
+
+<div class="layout">
+  <aside>
+    <h2>Configuration</h2>
+    <div class="field">
+      <label>Collection</label>
+      <select><option>python_docs</option><option>company_handbook</option><option>api_reference</option></select>
+    </div>
+    <div class="field">
+      <label>Chunks to retrieve (k)</label>
+      <div class="rangewrap"><input type="range" min="1" max="15" value="5" id="kslider"><span class="rangeval" id="kval">5</span></div>
+    </div>
+    <div class="field">
+      <label>MMR &lambda; (relevance &harr; diversity)</label>
+      <div class="rangewrap"><input type="range" min="0" max="100" value="50" id="mslider"><span class="rangeval" id="mval">0.5</span></div>
+    </div>
+    <label class="check"><input type="checkbox" checked> Use MMR (diversity)</label>
+    <label class="check"><input type="checkbox" checked> Evaluate answer quality</label>
+    <div class="sb-note">Local-first RAG. Documents are chunked, embedded with <code>all-MiniLM-L6-v2</code>, and answered by Llama 3.3 70B.</div>
+  </aside>
+
+  <main>
+    <h1>Ask your documents</h1>
+    <p class="lede">Every answer is grounded in retrieved context and scored automatically for faithfulness, relevance, and hallucination.</p>
+
+    <div class="ask">
+      <input type="text" id="q" placeholder="How does Python's GIL affect threading?" value="How does Python's GIL affect threading?">
+      <button id="askbtn">Ask</button>
+    </div>
+    <div class="chips">
+      <span class="chip">How does Python's GIL affect threading?</span>
+      <span class="chip">What is context precision?</span>
+      <span class="chip">Explain vector similarity search</span>
+    </div>
+
+    <div class="loading" id="loading"><span class="spinner"></span> Retrieving context and generating answer&hellip;</div>
+
+    <div class="result" id="result">
+      <div>
+        <div class="sec-title">Answer</div>
+        <div class="answer">
+          Python's Global Interpreter Lock (GIL) is a mutex that allows only one thread to execute Python bytecode at a time<sup>[1]</sup>. This means CPU-bound multithreaded programs see little speedup, because threads cannot run Python code in true parallel<sup>[2]</sup>. I/O-bound workloads still benefit, since the GIL is released during blocking I/O operations, letting other threads run<sup>[1]</sup>. For CPU-bound parallelism, the standard recommendation is to use the <code>multiprocessing</code> module, which sidesteps the GIL by running separate processes<sup>[3]</sup>.
+        </div>
+
+        <div class="sec-title">Sources</div>
+        <div class="source open">
+          <div class="source-head"><span class="cite">python_docs.md &middot; chunk 12</span><span class="score">score 0.891</span></div>
+          <div class="source-body"><pre>The GIL is a mutex protecting access to Python objects, preventing
+multiple threads from executing Python bytecodes simultaneously.
+It is released around blocking I/O so I/O-bound threads can proceed.</pre></div>
+        </div>
+        <div class="source">
+          <div class="source-head"><span class="cite">python_docs.md &middot; chunk 27</span><span class="score">score 0.842</span></div>
+          <div class="source-body"><pre>Because of the GIL, CPU-bound programs do not gain performance from
+threading. Use multiprocessing or native extensions to achieve
+parallelism across cores.</pre></div>
+        </div>
+        <div class="source">
+          <div class="source-head"><span class="cite">threading_guide.md &middot; chunk 4</span><span class="score">score 0.796</span></div>
+          <div class="source-body"><pre>The multiprocessing module spawns separate interpreter processes,
+each with its own GIL, enabling true parallel execution on
+multiple CPU cores.</pre></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="evalcard">
+          <h3>Evaluation</h3>
+          <div class="metric">
+            <div class="row"><b>Faithfulness</b><span class="val" style="color:var(--green)">0.94</span></div>
+            <div class="bar"><span style="width:94%;background:var(--green)"></span></div>
+          </div>
+          <div class="metric">
+            <div class="row"><b>Answer Relevance</b><span class="val" style="color:var(--green)">0.89</span></div>
+            <div class="bar"><span style="width:89%;background:var(--green)"></span></div>
+          </div>
+          <div class="metric">
+            <div class="row"><b>Context Precision</b><span class="val" style="color:var(--amber)">0.78</span></div>
+            <div class="bar"><span style="width:78%;background:var(--amber)"></span></div>
+          </div>
+          <div class="metric">
+            <div class="row"><b>Hallucination</b><span class="val" style="color:var(--green)">0.02</span></div>
+            <div class="bar"><span style="width:8%;background:var(--green)"></span></div>
+          </div>
+          <div class="eval-foot">Hallucination is lower-is-better: the fraction of claims not supported by retrieved context.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  var k = document.getElementById('kslider'), kv = document.getElementById('kval');
+  k.addEventListener('input', function(){ kv.textContent = k.value; });
+  var m = document.getElementById('mslider'), mv = document.getElementById('mval');
+  m.addEventListener('input', function(){ mv.textContent = (m.value/100).toFixed(1); });
+
+  document.querySelectorAll('.source-head').forEach(function(h){
+    h.addEventListener('click', function(){ h.parentElement.classList.toggle('open'); });
+  });
+  document.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click', function(){ document.getElementById('q').value = c.textContent; });
+  });
+
+  var result = document.getElementById('result'), loading = document.getElementById('loading');
+  document.getElementById('askbtn').addEventListener('click', function(){
+    result.classList.remove('show');
+    loading.classList.add('show');
+    setTimeout(function(){
+      loading.classList.remove('show');
+      result.classList.add('show');
+      result.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 900);
+  });
+</script>
+</body>
+</html>
